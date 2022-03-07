@@ -4,15 +4,20 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('pwpcii-2022:server');
-var http = require('http');
+import app from '../app';
+// var debug = require('debug')('pwpcii-2022:server');
+import Debug from 'debug';
+// var http = require('http');
+import http from 'http';
+
+// Creando instancia del debugger
+const debug = Debug("pwpcii-2022:server");
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(process.env.PORT || '3000');
 // app es una instancia de ExpressJs[] [ NODE ] 
 app.set('port', port);
 
@@ -20,7 +25,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app); //Callback (req,res,next, err) => {} 
+const server = http.createServer(app); //Callback (req,res,next, err) => {} 
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -35,7 +40,7 @@ server.on('listening', onListening);
  */
 
 function normalizePort(val) {
-  var port = parseInt(val, 10);
+  const port = parseInt(val, 10);
 
   if (isNaN(port)) {
     // named pipe
@@ -66,11 +71,13 @@ function onError(error) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
+      // console.error(bind + ' requires elevated privileges');
+      console.error(`${bind} requires elevated privileges`);
       process.exit(1);
       break;
     case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
+      // console.error(bind + ' is already in use');
+      console.error(`${bind} is already in use`);
       process.exit(1);
       break;
     default:
@@ -83,10 +90,9 @@ function onError(error) {
  */
 
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  const addr = server.address();
+  const bind = typeof addr === "string" ? `pipe ${addr}` : 
+  `port ' ${port}`; 
+  debug(`Listening on ${bind}`);
   console.log(`Servidor escuchando... 🤖👂 en ${app.get('port')}`);
 }
