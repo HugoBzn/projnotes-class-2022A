@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./server/bin/www",
-    "dev": "babel-watch ./server/bin/www"
+    "start": "node ./dist/bin/www",
+    "dev": "babel-watch ./server/bin/www",
+    "clean": "rimraf dist",
+    "build:s": "npm run clean && babel ./server --out-dir dist --copy-files"
   },
   "dependencies": {
     "app-root-path": "^3.0.0",
