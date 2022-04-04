@@ -1,9 +1,13 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background-color: rgba(72, 66, 75, 0.452);
-}
-
-a {
-  color: #00B7FF;
-}
+body{
+    padding: 50px;
+    font: "Lucida Grande", Helvetica, sans-serif;
+  }
+  
+  a{
+    color: #00B7FF;
+  }
+  
+  
+  h1 {
+    color: teal;
+  }
