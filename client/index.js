@@ -1,4 +1,3 @@
-/* eslint-disable */
 /* eslint-disable no-console */
 
 // Incorporando estilos a mi bundle
