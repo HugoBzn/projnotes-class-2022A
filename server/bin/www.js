@@ -11,27 +11,27 @@ import Debug from 'debug';
 import http from 'http';
 
 // Creando instancia del debugger
-const debug = Debug("pwpcii-2022:server");
+const debug = Debug('pwpcii-2022:server');
 
 /**
  * Get port from environment and store in Express.
  */
 
 const port = normalizePort(process.env.PORT || '3000');
-// app es una instancia de ExpressJs[] [ NODE ] 
+// app es una instancia de ExpressJs[] [ NODE ]
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-const server = http.createServer(app); //Callback (req,res,next, err) => {} 
+const server = http.createServer(app); // Callback (req,res,next, err) => {}
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port); //Pone a escuchar al servidor
+server.listen(port); // Pone a escuchar al servidor
 server.on('error', onError); // Se registran eventos
 server.on('listening', onListening);
 
@@ -64,9 +64,7 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  const bind = typeof port === 'string' ? `Pipe ${port}` : `Port ${port}`;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -91,8 +89,7 @@ function onError(error) {
 
 function onListening() {
   const addr = server.address();
-  const bind = typeof addr === "string" ? `pipe ${addr}` : 
-  `port ' ${port}`; 
+  const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ' ${port}`;
   debug(`Listening on ${bind}`);
   console.log(`Servidor escuchando... 🤖👂 en ${app.get('port')}`);
 }
