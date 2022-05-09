@@ -16,6 +16,8 @@ import morgan from 'morgan';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import WebpackHotMiddleware from 'webpack-hot-middleware';
+// Importando configurador de plantilas
+import templateEngineConfigurator from './config/templateEngine';
 import indexRouter from './routes/index';
 import usersRouter from './routes/users';
 import aboutRouter from './routes/about';
@@ -67,8 +69,7 @@ if (nodeEnv === 'development') {
 
 // Configuración del motor de plantillas (Template engine)
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
+templateEngineConfigurator(app);
 
 // Todos los middlewares globales van primero que cualquier otro middleware de la aplicación
 app.use(morgan('dev', { stream: winston.stream }));
