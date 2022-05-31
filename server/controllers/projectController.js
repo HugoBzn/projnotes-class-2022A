@@ -9,8 +9,7 @@ const index = (req, res) => {
 // Agrega ideas de proyectos
 // GET /projects/add
 const add = (req, res) => {
-  res.send('Agregando ideas de proyectos 🚧');
-  // TODO: Agregar codigo para agregar proyectos
+  res.render('projects/addProjectView', {});
 };
 
 // Exportando el controlador
