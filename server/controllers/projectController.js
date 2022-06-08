@@ -1,5 +1,8 @@
 import log from '../config/winston';
 
+// Importando el modelo Project
+import ProjectModel from '../models/ProjectModels';
+
 /* Action Methods */
 // Lista los proyectos
 // GET /projects | GET /projects/index
@@ -16,14 +19,14 @@ const add = (req, res) => {
 
 // Procesa el formulario que Agrega ideas de proyectos
 // POST /projects/add
-const addPost = (req, res) => {
+const addPost = async (req, res) => {
   const { errorData } = req;
   // Crear view models para este action method
   let project = {};
   let errorModel = {};
 
   if (errorData) {
-    log.info('Se retorna objeto de error de validacion');
+    log.error('💥 Se retorna objeto de error de validacion');
     // Rescatando el objeto validado
     project = errorData.value;
     // Usamos un reduce para generar un objeto de errores a partir de inner
@@ -40,15 +43,27 @@ const addPost = (req, res) => {
     log.info('Se retorna objeto project valido');
     // Desestructurando la informacion del formulario
     const { validData } = req;
-    // Regresar un objeto con los datos
-    // obtenidos del formulario
-    // res.status(200).json(validData);
-    project = validData;
+    // Crear un documento con los datos provistos por
+    // el formulario y guardar dicho documento en projectModel
+    log.info('Se salva objeto Project');
+    const projectModel = new ProjectModel(validData);
+
+    // Siempre que se ejecuta una aplicacion que depende de un tercero es una buena práctica
+    // envolver esa operacion eun bloque try catch
+    try {
+      // Se salva el documento projecto
+      project = await projectModel.save();
+    } catch (error) {
+      log.error(`Ha fallado el intendo de salvar un pryecto ${error.message}`);
+      return res.status(500).json({ error });
+    }
   }
 
   // Respondemos con los viewModels generados
-  res.render('projects/addProjectView', { project, errorModel });
-  // res.status(200).json({ project, errorModel });
+  // res.render('projects/addProjectView', { project, errorModel });
+
+  // Sanity check
+  return res.status(200).json({ project, errorModel });
 };
 
 // Exportando el controlador
