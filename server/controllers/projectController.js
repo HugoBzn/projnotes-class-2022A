@@ -6,9 +6,18 @@ import ProjectModel from '../models/ProjectModels';
 /* Action Methods */
 // Lista los proyectos
 // GET /projects | GET /projects/index
-const index = (req, res) => {
-  res.send('Listando proyectos 🚧');
-  //   TODO: Agregar codigo de listado de proyectos
+const index = async (req, res) => {
+  // 1. Pedir a la base de datos que me de todos los proyectos que tiene
+  // db.projects.find();
+  try {
+    log.info('Listando proyectos... ⌛');
+    const projectDocs = await ProjectModel.find();
+    log.info('Proyectos listados con exito... 🎉');
+    res.json(projectDocs);
+  } catch (error) {
+    log.error(`💥 Error al listar proyectos: ${error.message}`);
+    res.status(500).json(error);
+  }
 };
 
 // Agrega ideas de proyectos
@@ -20,11 +29,14 @@ const add = (req, res) => {
 // Procesa el formulario que Agrega ideas de proyectos
 // POST /projects/add
 const addPost = async (req, res) => {
-  const { errorData } = req;
+  // Desestructurando la informacion del formulario o de un posible error
+  const { errorData, validData } = req;
+
   // Crear view models para este action method
   let project = {};
   let errorModel = {};
 
+  // Verifico si hay error de validacion
   if (errorData) {
     log.error('💥 Se retorna objeto de error de validacion');
     // Rescatando el objeto validado
@@ -38,32 +50,28 @@ const addPost = async (req, res) => {
       return newVal;
     }, {});
     // La validacion falló
-    // res.status(200).json(errorData);
-  } else {
-    log.info('Se retorna objeto project valido');
-    // Desestructurando la informacion del formulario
-    const { validData } = req;
-    // Crear un documento con los datos provistos por
-    // el formulario y guardar dicho documento en projectModel
-    log.info('Se salva objeto Project');
-    const projectModel = new ProjectModel(validData);
-
-    // Siempre que se ejecuta una aplicacion que depende de un tercero es una buena práctica
-    // envolver esa operacion eun bloque try catch
-    try {
-      // Se salva el documento projecto
-      project = await projectModel.save();
-    } catch (error) {
-      log.error(`Ha fallado el intendo de salvar un pryecto ${error.message}`);
-      return res.status(500).json({ error });
-    }
+    return res.render('projects/addProjectView', { project, errorModel });
   }
+  log.info('Se retorna objeto project valido');
+  // Crear un documento con los datos provistos por
+  // el formulario y guardar dicho documento en projectModel
+  log.info('Se salva objeto Project');
+  const projectModel = new ProjectModel(validData);
 
-  // Respondemos con los viewModels generados
-  // res.render('projects/addProjectView', { project, errorModel });
-
-  // Sanity check
-  return res.status(200).json({ project, errorModel });
+  // Siempre que se ejecuta una aplicacion que depende de un tercero es una buena práctica
+  // envolver esa operacion eun bloque try catch
+  try {
+    log.info('Salvando el proyecto... ⌛');
+    // Se salva el documento projecto
+    project = await projectModel.save();
+    log.info('🎉 Proyecto salvado con exito 🎉');
+    // Redireccionando al recurso que lista los proyectos
+    // GET: /projects
+    return res.redirect('/projects');
+  } catch (error) {
+    log.error(`Ha fallado el intendo de salvar un proyecto ${error.message}`);
+    return res.status(500).json({ error });
+  }
 };
 
 // Exportando el controlador
